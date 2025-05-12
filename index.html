@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Scores Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .last-updated { margin-top: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>User Scores</h1>
+    <div id="scores-container">Loading scores...</div>
+    <div id="last-updated" class="last-updated"></div>
+
+    <script>
+        // Fetch the scores data
+        async function fetchScores() {
+            try {
+                const response = await fetch('scores.json?t=' + new Date().getTime());
+                const data = await response.json();
+                displayScores(data);
+            } catch (error) {
+                document.getElementById('scores-container').innerHTML = 
+                    'Error loading scores. Please try again later.';
+                console.error('Error:', error);
+            }
+        }
+
+        // Displays the scores in a table
+        function displayScores(data) {
+            let html = '<table><tr><th>User</th><th>Score</th></tr>';
+            
+            data.users.sort((a, b) => b.score - a.score)
+                      .forEach(user => {
+                html += `<tr><td>${user.name}</td><td>${user.score}</td></tr>`;
+            });
+            
+            html += '</table>';
+            document.getElementById('scores-container').innerHTML = html;
+            document.getElementById('last-updated').textContent = 
+                `Last updated: ${new Date(data.last_updated).toLocaleString()}`;
+        }
+
+        // Load scores when page loads
+        fetchScores();
+        
+        // Optional: Refresh every 5 minutes
+        setInterval(fetchScores, 300000);
+    </script>
+</body>
+</html>
