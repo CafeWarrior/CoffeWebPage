@@ -1,0 +1,7 @@
+{
+  "last_updated": "2023-11-15T12:00:00Z",
+  "users": [
+    {"name": "User1", "score": 150},
+    {"name": "User2", "score": 200}
+  ]
+}
